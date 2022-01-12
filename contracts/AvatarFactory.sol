@@ -5,10 +5,9 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "./IFactoryERC721.sol";
-import "./Creature.sol";
-import "./CreatureLootBox.sol";
+import "./Avatar.sol";
 
-contract CreatureFactory is FactoryERC721, Ownable {
+contract AvatarFactory is FactoryERC721, Ownable {
     using Strings for string;
 
     event Transfer(
@@ -19,39 +18,33 @@ contract CreatureFactory is FactoryERC721, Ownable {
 
     address public proxyRegistryAddress;
     address public nftAddress;
-    address public lootBoxNftAddress;
-    string public baseURI = "https://creatures-api.opensea.io/api/factory/";
+    string public baseURI = "https://ipfs.io/ipfs/factory/";
+
+    
+    uint256 AVATAR_SUPPLY = 100;
 
     /*
-     * Enforce the existence of only 100 OpenSea creatures.
-     */
-    uint256 CREATURE_SUPPLY = 100;
-
-    /*
-     * Three different options for minting Creatures (basic, premium, and gold).
+     * Three different options for minting Avatarss (basic, premium, and gold).
      */
     uint256 NUM_OPTIONS = 3;
-    uint256 SINGLE_CREATURE_OPTION = 0;
-    uint256 MULTIPLE_CREATURE_OPTION = 1;
+    uint256 SINGLE_AVATAR_OPTION = 0;
+    uint256 MULTIPLE_AVATAR_OPTION = 1;
     uint256 LOOTBOX_OPTION = 2;
-    uint256 NUM_CREATURES_IN_MULTIPLE_CREATURE_OPTION = 4;
+    uint256 NUM_AVATARS_IN_MULTIPLE_AVATAR_OPTION = 4;
 
     constructor(address _proxyRegistryAddress, address _nftAddress) {
         proxyRegistryAddress = _proxyRegistryAddress;
         nftAddress = _nftAddress;
-        lootBoxNftAddress = address(
-            new CreatureLootBox(_proxyRegistryAddress, address(this))
-        );
 
         fireTransferEvents(address(0), owner());
     }
 
     function name() override external pure returns (string memory) {
-        return "OpenSeaCreature Item Sale";
+        return "Item Sale";
     }
 
     function symbol() override external pure returns (string memory) {
-        return "CPF";
+        return "MyC";
     }
 
     function supportsFactoryInterface() override public pure returns (bool) {
@@ -78,29 +71,24 @@ contract CreatureFactory is FactoryERC721, Ownable {
         // Must be sent from the owner proxy or owner.
         ProxyRegistry proxyRegistry = ProxyRegistry(proxyRegistryAddress);
         assert(
-            address(proxyRegistry.proxies(owner())) == _msgSender() ||
-                owner() == _msgSender() ||
-                _msgSender() == lootBoxNftAddress
+            address(proxyRegistry.proxies(owner()))
+             == _msgSender() ||
+                owner() == _msgSender()
         );
         require(canMint(_optionId));
 
-        Creature openSeaCreature = Creature(nftAddress);
-        if (_optionId == SINGLE_CREATURE_OPTION) {
-            openSeaCreature.mintTo(_toAddress);
-        } else if (_optionId == MULTIPLE_CREATURE_OPTION) {
+        Avatar avatar = Avatar(nftAddress);
+        if (_optionId == SINGLE_AVATAR_OPTION) {
+            avatar.mintTo(_toAddress);
+        } else if (_optionId == MULTIPLE_AVATAR_OPTION) {
             for (
                 uint256 i = 0;
-                i < NUM_CREATURES_IN_MULTIPLE_CREATURE_OPTION;
+                i < NUM_AVATARS_IN_MULTIPLE_AVATAR_OPTION;
                 i++
             ) {
-                openSeaCreature.mintTo(_toAddress);
+                avatar.mintTo(_toAddress);
             }
-        } else if (_optionId == LOOTBOX_OPTION) {
-            CreatureLootBox openSeaCreatureLootBox = CreatureLootBox(
-                lootBoxNftAddress
-            );
-            openSeaCreatureLootBox.mintTo(_toAddress);
-        }
+        } 
     }
 
     function canMint(uint256 _optionId) override public view returns (bool) {
@@ -108,21 +96,16 @@ contract CreatureFactory is FactoryERC721, Ownable {
             return false;
         }
 
-        Creature openSeaCreature = Creature(nftAddress);
-        uint256 creatureSupply = openSeaCreature.totalSupply();
+        Avatar avatar = Avatar(nftAddress);
+        uint256 avatarSupply = avatar.totalSupply();
 
         uint256 numItemsAllocated = 0;
-        if (_optionId == SINGLE_CREATURE_OPTION) {
+        if (_optionId == SINGLE_AVATAR_OPTION) {
             numItemsAllocated = 1;
-        } else if (_optionId == MULTIPLE_CREATURE_OPTION) {
-            numItemsAllocated = NUM_CREATURES_IN_MULTIPLE_CREATURE_OPTION;
-        } else if (_optionId == LOOTBOX_OPTION) {
-            CreatureLootBox openSeaCreatureLootBox = CreatureLootBox(
-                lootBoxNftAddress
-            );
-            numItemsAllocated = openSeaCreatureLootBox.itemsPerLootbox();
-        }
-        return creatureSupply < (CREATURE_SUPPLY - numItemsAllocated);
+        } else if (_optionId == MULTIPLE_AVATAR_OPTION) {
+            numItemsAllocated = NUM_AVATARS_IN_MULTIPLE_AVATAR_OPTION;
+        } 
+        return avatarSupply < (AVATAR_SUPPLY - numItemsAllocated);
     }
 
     function tokenURI(uint256 _optionId) override external view returns (string memory) {
@@ -130,7 +113,6 @@ contract CreatureFactory is FactoryERC721, Ownable {
     }
 
     /**
-     * Hack to get things to work automatically on OpenSea.
      * Use transferFrom so the frontend doesn't have to worry about different method names.
      */
     function transferFrom(
@@ -142,7 +124,6 @@ contract CreatureFactory is FactoryERC721, Ownable {
     }
 
     /**
-     * Hack to get things to work automatically on OpenSea.
      * Use isApprovedForAll so the frontend doesn't have to worry about different method names.
      */
     function isApprovedForAll(address _owner, address _operator)
@@ -166,7 +147,6 @@ contract CreatureFactory is FactoryERC721, Ownable {
     }
 
     /**
-     * Hack to get things to work automatically on OpenSea.
      * Use isApprovedForAll so the frontend doesn't have to worry about different method names.
      */
     function ownerOf(uint256) public view returns (address _owner) {

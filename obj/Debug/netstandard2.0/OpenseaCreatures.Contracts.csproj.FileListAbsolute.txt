@@ -1,0 +1,10 @@
+C:\Users\user\Desktop\Unity Projects\Personal\opensea-creatures\bin\Debug\netstandard2.0\OpenseaCreatures.Contracts.deps.json
+C:\Users\user\Desktop\Unity Projects\Personal\opensea-creatures\bin\Debug\netstandard2.0\OpenseaCreatures.Contracts.dll
+C:\Users\user\Desktop\Unity Projects\Personal\opensea-creatures\bin\Debug\netstandard2.0\OpenseaCreatures.Contracts.pdb
+C:\Users\user\Desktop\Unity Projects\Personal\opensea-creatures\obj\Debug\netstandard2.0\OpenseaCreatures.Contracts.csproj.AssemblyReference.cache
+C:\Users\user\Desktop\Unity Projects\Personal\opensea-creatures\obj\Debug\netstandard2.0\OpenseaCreatures.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\Desktop\Unity Projects\Personal\opensea-creatures\obj\Debug\netstandard2.0\OpenseaCreatures.Contracts.AssemblyInfoInputs.cache
+C:\Users\user\Desktop\Unity Projects\Personal\opensea-creatures\obj\Debug\netstandard2.0\OpenseaCreatures.Contracts.AssemblyInfo.cs
+C:\Users\user\Desktop\Unity Projects\Personal\opensea-creatures\obj\Debug\netstandard2.0\OpenseaCreatures.Contracts.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\Unity Projects\Personal\opensea-creatures\obj\Debug\netstandard2.0\OpenseaCreatures.Contracts.dll
+C:\Users\user\Desktop\Unity Projects\Personal\opensea-creatures\obj\Debug\netstandard2.0\OpenseaCreatures.Contracts.pdb
